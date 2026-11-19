@@ -1,0 +1,61 @@
+﻿station_id,name,station_type,capacity,nova,odjezdu_za_den
+ST001,Masarykovo nám.,prumysl,10,False,0.780373831775701
+ST002,Nová radnice,centrum,10,False,1.7570093457943925
+ST003,Stodolní,nadrazi,10,False,1.0560747663551402
+ST004,Karolina,centrum,20,False,1.8738317757009346
+ST005,Dolní Vítkovice,centrum,24,False,1.588785046728972
+ST006,Hlavní nádraží,univerzita,20,True,1.5560747663551402
+ST007,Svinov nádraží,obytna,24,True,2.0514018691588785
+ST008,Poruba VŠB,obytna,20,True,1.808411214953271
+ST009,Poruba Hlavní třída,centrum,20,False,1.7850467289719627
+ST010,Dubina OC,nadrazi,12,False,1.1401869158878504
+ST011,Zábřeh Hulváky,univerzita,12,True,1.514018691588785
+ST012,Hrabůvka náměstí,obytna,12,True,1.8738317757009346
+ST013,Výškovice Jižní,park,10,False,2.042056074766355
+ST014,Přívoz nádraží,obytna,20,True,2.0233644859813085
+ST015,Bělský les,centrum,12,False,1.574766355140187
+ST016,Komenského sady,centrum,10,False,1.644859813084112
+ST017,Landek park,centrum,15,False,1.7102803738317758
+ST018,Havlíčkovo nábřeží,nadrazi,20,False,1.1682242990654206
+ST019,Fakultní nemocnice,obytna,24,False,1.1214953271028036
+ST020,Ostravar Aréna,obytna,15,False,1.1869158878504673
+ST021,Slezskoostravský hrad,univerzita,15,True,1.5420560747663552
+ST022,Michálkovice,obytna,20,False,1.2009345794392523
+ST023,Radvanice,centrum,15,False,1.5981308411214954
+ST024,Hrušov,centrum,15,False,1.6682242990654206
+ST025,Heřmanice,obytna,12,False,1.1214953271028036
+ST026,Muglinov,park,10,False,2.2616822429906542
+ST027,Martinov,obytna,12,False,1.205607476635514
+ST028,Antošovice,centrum,20,False,1.7757009345794392
+ST029,Kunčice,univerzita,20,True,1.3644859813084111
+ST030,Hulváky Sever,univerzita,15,False,0.8364485981308412
+ST031,Hlubina,centrum,20,False,1.52803738317757
+ST032,Lauby,obytna,15,False,1.191588785046729
+ST033,Vítkovice Ironworks,obytna,10,False,1.102803738317757
+ST034,Mariánské nám.,obytna,10,False,1.2523364485981308
+ST035,Jiráskovo nám.,obytna,15,False,1.1074766355140186
+ST036,Smetanovo nám.,univerzita,20,False,1.0093457943925233
+ST037,Prokešovo nám.,centrum,15,False,1.780373831775701
+ST038,Ostravice most,prumysl,24,False,0.6915887850467289
+ST039,Odra Marina,park,12,False,2.2990654205607477
+ST040,Poruba Sever,univerzita,12,False,1.0186915887850467
+ST041,Poruba Jih,park,24,False,2.2429906542056073
+ST042,Dubina Východ,obytna,12,False,1.1308411214953271
+ST043,Zábřeh Sever,centrum,10,False,1.7850467289719627
+ST044,Bazaly,prumysl,24,False,0.9579439252336449
+ST045,Pustkovec,park,12,False,2.383177570093458
+ST046,Plesná,park,20,False,2.1869158878504673
+ST047,Třebovice,park,20,False,2.177570093457944
+ST048,Krásné Pole,univerzita,24,False,0.9392523364485982
+ST049,Nová Bělá,prumysl,12,False,0.794392523364486
+ST050,Stará Bělá,obytna,24,False,1.144859813084112
+ST051,Polanka,park,10,False,2.2009345794392523
+ST052,Proskovice,obytna,24,False,1.2289719626168225
+ST053,Koblov,centrum,12,False,1.8925233644859814
+ST054,Petřkovice,obytna,15,False,1.1635514018691588
+ST055,Hošťálkovice,obytna,15,False,0.9906542056074766
+ST056,Lhotka,nadrazi,20,False,1.0934579439252337
+ST057,Hrabová,prumysl,15,False,0.8084112149532711
+ST058,Svinov Sever,obytna,12,False,1.2570093457943925
+ST059,Nová Ves,prumysl,12,False,0.719626168224299
+ST060,Zámecká,obytna,20,False,1.2242990654205608
