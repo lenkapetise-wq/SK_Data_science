@@ -53,10 +53,40 @@ jizdy["distance_km"] = (                                            #formát pro
 jizdy["delka_jizdy"] = jizdy["end_time"] - jizdy["start_time"]
 print(jizdy.info())
 print(jizdy.head())
-print(jizdy.describe())                                               # kontrola dat: záporné hodnoty? 0? etremní hodnoty?
+print(jizdy.describe())                                               # kontrola dat: záporné hodnoty, min délka jízdy=231 days
 print((jizdy["delka_jizdy"] < pd.Timedelta(0)).sum())                 # vyhledání počtu záporných hodnot_143
+egativni_jizdy = jizdy[
+    jizdy["delka_jizdy"] < pd.Timedelta(0)
+]
 
+negativni_jizdy = jizdy[
+    jizdy["delka_jizdy"] < pd.Timedelta(0)
+]
+print(
+    negativni_jizdy[
+        ["trip_id",
+         "start_time",
+         "end_time",
+         "delka_jizdy"]
+    ].head(20)
+)
+negativni_jizdy["delka_jizdy"].sort_values().head(20)                   # podobný charakter end_time je dříve než start_time
+#                                                                       # jde o nekonzistentní data, proto budou odstraněna
 
+# print(negativni_jizdy["delka_jizdy"].min())
+# jizdy.sort_values("delka_jizdy").head(10)
+#
+# jizdy["delka_jizdy_hod"] = (
+#     jizdy["delka_jizdy"]
+#     .dt.total_seconds() / 3600
+# )
+#
+# print(jizdy["delka_jizdy_hod"].describe())
+
+jizdy = jizdy[
+    jizdy["delka_jizdy"] >= pd.Timedelta(0)                             # vynechání řádků se zápornou hodnotou "delka_jizdy"
+]
+print((jizdy["delka_jizdy"] < pd.Timedelta(0)).sum())
 
 # print(stanice.info())
 # print(stanice.head())
