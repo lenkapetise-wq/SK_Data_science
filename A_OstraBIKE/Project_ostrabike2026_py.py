@@ -53,7 +53,8 @@ jizdy["distance_km"] = (                                            #formát pro
 jizdy["delka_jizdy"] = jizdy["end_time"] - jizdy["start_time"]
 print(jizdy.info())
 print(jizdy.head())
-
+print(jizdy.describe())                                               # kontrola dat: záporné hodnoty? 0? etremní hodnoty?
+print((jizdy["delka_jizdy"] < pd.Timedelta(0)).sum())                 # vyhledání počtu záporných hodnot_143
 
 
 
