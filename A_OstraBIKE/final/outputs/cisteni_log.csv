@@ -1,0 +1,8 @@
+﻿krok,radku_pred,radku_po,proc
+načtení jizdy.csv,40000,40000,výchozí stav
+duplicitní řádky,40000,39600,úplně shodný řádek = stejná jízda exportovaná dvakrát
+konec před začátkem,39600,39460,"nevíme, který čas je špatně; opravou bychom délku jízdy vymysleli"
+jízdy delší než 24 h,39460,39410,"nevrácené/nezamčené kolo, ne jízda; zkreslilo by průměrnou dobu"
+výsledek čištění jízd,40000,39410,"opraveno: formát času, distance_km, ID stanic; vratky mimo tržbu"
+počasí – chybějící teploty,610,610,14 teplot doplněno interpolací (teplota se mění plynule)
+uživatelé – rok narození,9000,9000,60 roků mimo 1925–2010 nastaveno na neznámé
