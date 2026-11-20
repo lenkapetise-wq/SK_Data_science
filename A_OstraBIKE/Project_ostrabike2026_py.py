@@ -87,6 +87,7 @@ jizdy = jizdy[
     jizdy["delka_jizdy"] >= pd.Timedelta(0)                             # vynechání řádků se zápornou hodnotou "delka_jizdy"
 ]
 print((jizdy["delka_jizdy"] < pd.Timedelta(0)).sum())
+# commit_test
 
 # print(stanice.info())
 # print(stanice.head())
