@@ -184,7 +184,7 @@ jizdy_anb = jizdy_an.merge(                                                   #t
     on="bike_id",
     how="left"
 )
-print(jizdy_anb.columns)
+print(jizdy_anb.info())
 
 jizdy_anb["date"] = jizdy_anb["start_time"].dt.normalize()                     #uprava formatu ["start_time"] pouze na format den
 print(jizdy_anb["date"])                                                       #tabulka jizdy_anbp: je propojeni jizdy, uzivatele,pocasi
@@ -194,9 +194,26 @@ jizdy_anbp=jizdy_anb.merge(
         on="date",
         how="left"
 )
-print(jizdy_anbp.columns)
+print(jizdy_anbp.info())
 
-analytics = jizdy_anbp.merge(                                                   #analytics: propojeni jizdy, uzivatele, pocasi, stanice
+print(
+jizdy_anbp[                                                                   #vypsání stanic psaných malým písmem
+    jizdy_anbp["start_station_id"]
+    != jizdy_anbp["start_station_id"].str.upper()
+]["start_station_id"].value_counts()
+)
+
+jizdy_anbp["start_station_id"] = (                                            #oprva malých písmen na VELKÁ start_station_id
+    jizdy_anbp["start_station_id"]
+    .str.upper()
+)
+
+jizdy_anbp["end_station_id"] = (                                               #oprva malých písmen na VELKÁ -end_station_id
+    jizdy_anbp["end_station_id"]
+    .str.upper()
+)
+
+analytics = jizdy_anbp.merge(                                  #analytics: propojeni jizdy, uzivatele, pocasi, stanice
     stanice,
     left_on="start_station_id",
     right_on="station_id",
@@ -204,55 +221,64 @@ analytics = jizdy_anbp.merge(                                                   
 )
 print(analytics.info())
 
-analytics = jizdy_anbp.merge(                                                   #analytics: propojeni jizdy, uzivatele, pocasi, stanice
+
+analytics = jizdy_anbp.merge(                                   #analytics: propojeni jizdy, uzivatele, pocasi, stanice
     stanice,
     left_on="end_station_id",
     right_on="station_id",
     how="left"
 )
+
 print(analytics.info())
-print(analytics.head())
+print(len(analytics))                                               #39857 řádků
+print(analytics.isna().sum())                                       #181 NA po připojení stanic- nutno řešit
 
-#DOTZY ZE ZADÁNÍ
-
-#MALÁ PÍSMENA V NÁZVECH STANIC:
-# pokud by byla malá písmena v názvech stanic,neproběhl by merge. Python je rozlišuje velká a malá písmena. Pro ověřní lze použít kód
-jizdy["start_station_id"] = (
-    jizdy["start_station_id"]
-    .str.upper()
+print(
+analytics[
+    analytics["station_id"].isna()
+]["start_station_id"].unique()
 )
 
-jizdy["end_station_id"] = (
-    jizdy["end_station_id"]
-    .str.upper()
-)
+print(
+set(jizdy_anbp["end_station_id"]) - set(stanice["station_id"]))     #stanice "ST999" není uvedena v referenční tabulce stanic
+
+print((analytics["end_station_id"] == "ST999").sum())               #181 jízd končí v ST999
+
+
+# #DOTZY ZE ZADÁNÍ
+#
+# #MALÁ PÍSMENA V NÁZVECH STANIC:
+# # pokud by byla malá písmena v názvech stanic,neproběhl by merge. Python je rozlišuje velká a malá písmena. Pro ověřní lze použít kód
+# jizdy["start_station_id"] = (
+#     jizdy["start_station_id"]
+#     .str.upper()
+# )
+#
+# jizdy["end_station_id"] = (
+#     jizdy["end_station_id"]
+#     .str.upper()
+# )
 # pokud kód nevrátí žáný řádek pak jsou v názvech stanic jen velká písmena
 
-#ST999? Zjištění přítmnosti ve sloupci
-jizdy[ jizdy["start_station_id"] == "ST999"]        # výsledek - ST999 není přítomna
-
-jizdy[jizdy["end_station_id"] == "ST999" ]          # výsledek - ST999 staní přítomna
-                                                    # nekonzistenntí identifikátor, vynechání z analýzy, protože neznám atributy stanice
-print(jizdy[jizdy["price_czk"] < 0])                # list 35 položek u kterých je záporná cena
-print(                                              # zobrazení 35 položek a příslušných záporných cen
-    jizdy.loc[
-        jizdy["price_czk"] < 0,
-        ["price_czk"]
-    ]
-)
-print(
-    jizdy[jizdy["price_czk"] < 0]["price_czk"]      #min-82CZK, max-10CZK, záporné částky odpovídají reálným částkám (komenzace/refundace)
-    .describe()                                     # částky budou zahrnuty do tržeb
-)
+# #ST999? Zjištění přítmnosti ve sloupci
+# jizdy[ jizdy["start_station_id"] == "ST999"]        # výsledek - ST999 není přítomna
+#
+# jizdy[jizdy["end_station_id"] == "ST999" ]          # výsledek - ST999 staní přítomna
+#                                                     # nekonzistenntí identifikátor, vynechání z analýzy, protože neznám atributy stanice
+# print(jizdy[jizdy["price_czk"] < 0])                # list 35 položek u kterých je záporná cena
+# print(                                              # zobrazení 35 položek a příslušných záporných cen
+#     jizdy.loc[
+#         jizdy["price_czk"] < 0,
+#         ["price_czk"]
+#     ]
+# )
+# print(
+#     jizdy[jizdy["price_czk"] < 0]["price_czk"]      #min-82CZK, max-10CZK, záporné částky odpovídají reálným částkám (komenzace/refundace)
+#     .describe()                                     # částky budou zahrnuty do tržeb
+# )
 
 #ANALÝZA
-print(analytics.info())
-print(len(analytics))                                        #39857 řádků
-print(analytics.isna().sum())                                #639 NA po připojení stanic- nutno řešit
 
-print(analytics[
-    analytics["station_id"].isna()
-]["start_station_id"].value_counts())
 
 #1 Sezónnost a počasí
 #
