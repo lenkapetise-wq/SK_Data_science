@@ -6,6 +6,8 @@ import pandas as pd
 import os
 
 from pandas import isna
+from pandas.core.groupby import groupby
+from seaborn._stats import aggregation
 
 print(os.getcwd())
 
@@ -15,9 +17,10 @@ kola = pd.read_csv("kola.csv")
 uzivatele = pd.read_csv("uzivatele.csv")
 pocasi = pd.read_csv("pocasi.csv")
 
+#PŘÍPRAVA DAT
+
 print(jizdy.info())
 print(jizdy.head())
-
 
 print(jizdy.duplicated().sum())                     # počet duplicitních jízd 400
 print(jizdy["trip_id"].duplicated().sum())          # unikanti trip_id potvrzeni, že se jedná o 400 duplicit
@@ -29,9 +32,6 @@ print(
     jizdy[jizdy["user_id"].isna()]["user_type"]      #turista 7276: všechny chybějící hodnoty vyfiltrovali turistu-nemá účet
     .value_counts())
 
-
-#jizdy["start_time"] = pd.to_datetime(jizdy["start_time"])       #různé formáty data
-#jizdy["end_time"] = pd.to_datetime(jizdy["end_time"])
 
 print(jizdy["start_time"].str.contains(r"\.", na=False).sum())  # počet záznamů datum s tečkami 1415
 print(jizdy["end_time"].str.contains(r"\.", na=False).sum())    # 1415
@@ -164,7 +164,120 @@ pocasi["temp_avg"] = pocasi["temp_avg"].interpolate()                   # dopln�
 print(pocasi.info())
 
 
+# SPOJOVÁNÍ TABULEK DO TABULKY JIZDYANL
 
+print(jizdy.columns)
+print(uzivatele.columns)
+print(kola.columns)
+print(stanice.columns)
+print(pocasi.columns)
 
+jizdy_an = jizdy.merge(                                                       # tabulka:jizdy_an je propojeni tabulek jizdy a uzivatele
+    uzivatele,
+    on="user_id",
+    how="left"
+)
+print(jizdy_an.info())
 
+jizdy_anb = jizdy_an.merge(                                                   #tabulka jizdy_anb: je propojení tabulek jizdy, uzivatele, kola
+    kola,
+    on="bike_id",
+    how="left"
+)
+print(jizdy_anb.columns)
 
+jizdy_anb["date"] = jizdy_anb["start_time"].dt.normalize()                     #uprava formatu ["start_time"] pouze na format den
+print(jizdy_anb["date"])                                                       #tabulka jizdy_anbp: je propojeni jizdy, uzivatele,pocasi
+
+jizdy_anbp=jizdy_anb.merge(
+        pocasi,
+        on="date",
+        how="left"
+)
+print(jizdy_anbp.columns)
+
+analytics = jizdy_anbp.merge(                                                   #analytics: propojeni jizdy, uzivatele, pocasi, stanice
+    stanice,
+    left_on="start_station_id",
+    right_on="station_id",
+    how="left"
+)
+print(analytics.info())
+
+analytics = jizdy_anbp.merge(                                                   #analytics: propojeni jizdy, uzivatele, pocasi, stanice
+    stanice,
+    left_on="end_station_id",
+    right_on="station_id",
+    how="left"
+)
+print(analytics.info())
+print(analytics.head())
+
+#DOTZY ZE ZADÁNÍ
+
+#MALÁ PÍSMENA V NÁZVECH STANIC:
+# pokud by byla malá písmena v názvech stanic,neproběhl by merge. Python je rozlišuje velká a malá písmena. Pro ověřní lze použít kód
+jizdy["start_station_id"] = (
+    jizdy["start_station_id"]
+    .str.upper()
+)
+
+jizdy["end_station_id"] = (
+    jizdy["end_station_id"]
+    .str.upper()
+)
+# pokud kód nevrátí žáný řádek pak jsou v názvech stanic jen velká písmena
+
+#ST999? Zjištění přítmnosti ve sloupci
+jizdy[ jizdy["start_station_id"] == "ST999"]        # výsledek - ST999 není přítomna
+
+jizdy[jizdy["end_station_id"] == "ST999" ]          # výsledek - ST999 staní přítomna
+                                                    # nekonzistenntí identifikátor, vynechání z analýzy, protože neznám atributy stanice
+print(jizdy[jizdy["price_czk"] < 0])                # list 35 položek u kterých je záporná cena
+print(                                              # zobrazení 35 položek a příslušných záporných cen
+    jizdy.loc[
+        jizdy["price_czk"] < 0,
+        ["price_czk"]
+    ]
+)
+print(
+    jizdy[jizdy["price_czk"] < 0]["price_czk"]      #min-82CZK, max-10CZK, záporné částky odpovídají reálným částkám (komenzace/refundace)
+    .describe()                                     # částky budou zahrnuty do tržeb
+)
+
+#ANALÝZA
+print(analytics.info())
+print(len(analytics))                                        #39857 řádků
+print(analytics.isna().sum())                                #639 NA po připojení stanic- nutno řešit
+
+print(analytics[
+    analytics["station_id"].isna()
+]["start_station_id"].value_counts())
+
+#1 Sezónnost a počasí
+#
+# denni_analyza = (analytics
+#     .groupby("date")
+#     .agg(
+#         pocet_jizd=("trip_id", "count"),
+#         temp_avg=("temp_avg", "first"),
+#         rain_mm=("rain_mm", "first")
+#     )
+#     .reset_index()
+# )                                                       #ve výsledku NaN ve slopuci temp_avg a rain_mm, nutnost sladt format data
+#
+# print(denni_analyza.head())
+#
+# print(analytics["date"].dtype)
+# print(pocasi["date"].dtype)
+#
+# print(analytics["date"].min())                                      #2025-01-03
+# print(analytics["date"].max())                                      #2026-10-31
+#
+# print(analytics["temp_avg"].isna().sum())                           #86 řádků nemá hodnotu "temp_avg"
+# print(
+#     analytics[analytics["temp_avg"].isna()][["date"]].head(20)      #20 prvních NA jsou v lednu a únoru
+# )
+#
+# print(pocasi["date"].min())                                         #2025-03-01
+# print(pocasi["date"].max())                                         #2026-10-31
